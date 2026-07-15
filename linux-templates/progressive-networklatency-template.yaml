@@ -46,27 +46,23 @@ spec:
           value: 2000
       authEnabled: false
   actions:
-    - isRemote: true
-      name: delay-4wm
-      identity: delay
+    - name: delay-vm-quf
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
-    - isRemote: true
-      name: delay-abh
-      identity: delay
+    - name: delay-vm-bab
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
-    - isRemote: true
-      name: delay-hw7
-      identity: delay
+    - name: delay-vm-p8n
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
-    - isRemote: true
-      name: delay-niy
-      identity: delay
+    - name: delay-vm-yqr
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
@@ -76,10 +72,10 @@ spec:
         faults:
           - name: linux-network-latency-200ms
       end: {}
-    - name: v-4xj
+    - name: v-qvh
       start:
         actions:
-          - name: delay-4wm
+          - name: delay-vm-quf
       end:
         faults:
           - name: linux-network-latency-200ms
@@ -89,11 +85,11 @@ spec:
           - name: linux-network-latency-500ms
       end:
         actions:
-          - name: delay-4wm
-    - name: v-acc
+          - name: delay-vm-quf
+    - name: v-bbc
       start:
         actions:
-          - name: delay-abh
+          - name: delay-vm-bab
       end:
         faults:
           - name: linux-network-latency-500ms
@@ -103,11 +99,11 @@ spec:
           - name: linux-network-latency-1000ms
       end:
         actions:
-          - name: delay-abh
-    - name: v-hx8
+          - name: delay-vm-bab
+    - name: v-p9p
       start:
         actions:
-          - name: delay-hw7
+          - name: delay-vm-p8n
       end:
         faults:
           - name: linux-network-latency-1000ms
@@ -117,11 +113,11 @@ spec:
           - name: linux-network-latency-2000ms
       end:
         actions:
-          - name: delay-hw7
-    - name: v-njz
+          - name: delay-vm-p8n
+    - name: v-yrp
       start:
         actions:
-          - name: delay-niy
+          - name: delay-vm-yqr
       end:
         faults:
           - name: linux-network-latency-2000ms
@@ -129,7 +125,7 @@ spec:
       start: {}
       end:
         actions:
-          - name: delay-niy
+          - name: delay-vm-yqr
   cleanupPolicy: delete
 revision: v1
 isDefault: true
