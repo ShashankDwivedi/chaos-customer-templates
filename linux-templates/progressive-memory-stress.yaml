@@ -42,21 +42,18 @@ spec:
           value: <+experiment.variables.worker_count>
       authEnabled: false
   actions:
-    - isRemote: true
-      name: delay-nuy
-      identity: delay
+    - name: delay-vm-b62
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
-    - isRemote: true
-      name: delay-udk
-      identity: delay
+    - name: delay-vm-mgy
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
-    - isRemote: true
-      name: delay-0fh
-      identity: delay
+    - name: delay-vm-3ti
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
@@ -66,10 +63,10 @@ spec:
         faults:
           - name: linux-memory-stress-p25
       end: {}
-    - name: v-nvx
+    - name: v-b73
       start:
         actions:
-          - name: delay-nuy
+          - name: delay-vm-b62
       end:
         faults:
           - name: linux-memory-stress-p25
@@ -79,11 +76,11 @@ spec:
           - name: linux-memory-stress-p50
       end:
         actions:
-          - name: delay-nuy
-    - name: v-ueg
+          - name: delay-vm-b62
+    - name: v-mhw
       start:
         actions:
-          - name: delay-udk
+          - name: delay-vm-mgy
       end:
         faults:
           - name: linux-memory-stress-p50
@@ -93,11 +90,11 @@ spec:
           - name: linux-memory-stress-p75
       end:
         actions:
-          - name: delay-udk
-    - name: v-0gb
+          - name: delay-vm-mgy
+    - name: v-3ui
       start:
         actions:
-          - name: delay-0fh
+          - name: delay-vm-3ti
       end:
         faults:
           - name: linux-memory-stress-p75
@@ -105,11 +102,12 @@ spec:
       start: {}
       end:
         actions:
-          - name: delay-0fh
+          - name: delay-vm-3ti
   cleanupPolicy: delete
-revision: v1
-isDefault: true
 variables:
   - name: worker_count
-    type: String
     value: <+input>
+    type: String
+    required: false
+revision: v1
+isDefault: true
