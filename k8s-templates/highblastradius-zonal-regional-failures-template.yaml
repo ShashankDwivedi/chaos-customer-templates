@@ -1,0 +1,35 @@
+name: highblastradius-zonal-regional-failures
+identity: highblastradiuszonalregionalfailures
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: KubernetesV2
+  faults:
+    - name: node-network-loss-p0n
+      identity: node-network-loss
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: TOTAL_CHAOS_DURATION
+          value: 300
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: 100
+        - name: NODES_AFFECTED_PERCENTAGE
+          value: 100
+        - name: NODE_LABEL
+          value: <+input>
+      authEnabled: false
+  vertices:
+    - name: v-p23
+      start:
+        faults:
+          - name: node-network-loss-p0n
+      end: {}
+    - name: v-end
+      start: {}
+      end:
+        faults:
+          - name: node-network-loss-p0n
+  cleanupPolicy: delete
+revision: v1
+isDefault: true
