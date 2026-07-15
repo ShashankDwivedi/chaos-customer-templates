@@ -1,0 +1,172 @@
+name: k8s-pod-progressive-cpu-hog
+identity: k8sprogressivecpuhog
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+    infraType: KubernetesV2
+    faults:
+        - name: pod-cpu-hog-p50
+          identity: pod-cpu-hog
+          revision: "1"
+          isEnterprise: true
+          values:
+            - name: TOTAL_CHAOS_DURATION
+              value: 60
+            - name: CPU_LOAD
+              value: "50"
+            - name: CPU_CORES
+              value: "0"
+            - name: NUMBER_OF_WORKERS
+              value: <+experiment.variables.NUMBER_OF_WORKERS>
+            - name: TARGET_CONTAINER
+              value: ""
+            - name: NODE_LABEL
+              value: ""
+            - name: PODS_AFFECTED_PERC
+              value: <+experiment.variables.POD_AFFECTED_PERCENTAGE>
+            - name: TARGET_WORKLOAD_KIND
+              value: <+experiment.variables.TARGET_WORKLOAD_KIND>
+            - name: TARGET_WORKLOAD_NAMESPACE
+              value: <+experiment.variables.TARGET_NAMESPACE>
+            - name: TARGET_WORKLOAD_NAMES
+              value: <+experiment.variables.TARGET_WORKLOAD_NAME>
+        - name: pod-cpu-hog-p75
+          identity: pod-cpu-hog
+          revision: "1"
+          isEnterprise: true
+          values:
+            - name: TOTAL_CHAOS_DURATION
+              value: 60
+            - name: CPU_LOAD
+              value: "75"
+            - name: CPU_CORES
+              value: "0"
+            - name: NUMBER_OF_WORKERS
+              value: <+experiment.variables.NUMBER_OF_WORKERS>
+            - name: TARGET_CONTAINER
+              value: ""
+            - name: NODE_LABEL
+              value: ""
+            - name: PODS_AFFECTED_PERC
+              value: <+experiment.variables.POD_AFFECTED_PERCENTAGE>
+            - name: TARGET_WORKLOAD_KIND
+              value: <+experiment.variables.TARGET_WORKLOAD_KIND>
+            - name: TARGET_WORKLOAD_NAMESPACE
+              value: <+experiment.variables.TARGET_NAMESPACE>
+            - name: TARGET_WORKLOAD_NAMES
+              value: <+experiment.variables.TARGET_WORKLOAD_NAME>
+        - name: pod-cpu-hog-p100
+          identity: pod-cpu-hog
+          revision: "1"
+          isEnterprise: true
+          values:
+            - name: TOTAL_CHAOS_DURATION
+              value: 60
+            - name: CPU_LOAD
+              value: "100"
+            - name: CPU_CORES
+              value: "0"
+            - name: NUMBER_OF_WORKERS
+              value: <+experiment.variables.NUMBER_OF_WORKERS>
+            - name: TARGET_CONTAINER
+              value: ""
+            - name: NODE_LABEL
+              value: ""
+            - name: PODS_AFFECTED_PERC
+              value: <+experiment.variables.POD_AFFECTED_PERCENTAGE>
+            - name: TARGET_WORKLOAD_KIND
+              value: <+experiment.variables.TARGET_WORKLOAD_KIND>
+            - name: TARGET_WORKLOAD_NAMESPACE
+              value: <+experiment.variables.TARGET_NAMESPACE>
+            - name: TARGET_WORKLOAD_NAMES
+              value: <+experiment.variables.TARGET_WORKLOAD_NAME>
+    actions:
+        - name: delay-d66
+          identity: delay
+          isEnterprise: false
+          continueOnCompletion: false
+          values: []
+        - name: delay-0uz
+          identity: delay
+          isEnterprise: false
+          continueOnCompletion: false
+          values: []
+        - name: delay-e8h
+          identity: delay
+          isEnterprise: false
+          continueOnCompletion: false
+          values: []
+    vertices:
+        - name: v-start
+          start:
+            faults:
+                - name: pod-cpu-hog-p50
+          end: {}
+        - name: v-d74
+          start:
+            actions:
+                - name: delay-d66
+          end:
+            faults:
+                - name: pod-cpu-hog-p50
+        - name: v-50to75
+          start:
+            faults:
+                - name: pod-cpu-hog-p75
+          end:
+            actions:
+                - name: delay-d66
+        - name: v-0vx
+          start:
+            actions:
+                - name: delay-0uz
+          end:
+            faults:
+                - name: pod-cpu-hog-p75
+        - name: v-75to100
+          start:
+            faults:
+                - name: pod-cpu-hog-p100
+          end:
+            actions:
+                - name: delay-0uz
+        - name: v-e9d
+          start:
+            actions:
+                - name: delay-e8h
+          end:
+            faults:
+                - name: pod-cpu-hog-p100
+        - name: v-end
+          start: {}
+          end:
+            actions:
+                - name: delay-e8h
+    cleanupPolicy: delete
+variables:
+    - name: TARGET_WORKLOAD_KIND
+      value: <+input>
+      type: String
+      required: true
+    - name: TARGET_NAMESPACE
+      value: <+input>
+      type: String
+      required: true
+    - name: TARGET_WORKLOAD_NAME
+      value: <+input>
+      type: String
+      required: true
+    - name: TARGET_WORKLOAD_LABELS
+      value: ""
+      type: String
+      required: false
+    - name: NUMBER_OF_WORKERS
+      value: "1"
+      type: Number
+      required: false
+    - name: POD_AFFECTED_PERCENTAGE
+      value: "100"
+      type: Number
+      required: true
+revision: v1
+isDefault: true
