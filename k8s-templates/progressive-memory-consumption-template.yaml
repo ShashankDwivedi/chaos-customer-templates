@@ -1,0 +1,164 @@
+name: k8s-pod-progressive-memory-hog
+identity: podprogressivememoryhog
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: KubernetesV2
+  faults:
+    - name: pod-memory-hog-p25
+      identity: pod-memory-hog
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: TOTAL_CHAOS_DURATION
+          value: "60"
+        - name: MEMORY_CONSUMPTION
+          value: <+input>
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: PODS_AFFECTED_PERC
+          value: <+experiment.variables.POD_AFFECTED_PERCENTAGE>
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: NUMBER_OF_WORKERS
+          value: <+experiment.variables.worker_count>
+    - name: pod-memory-hog-p50
+      identity: pod-memory-hog
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: TOTAL_CHAOS_DURATION
+          value: "60"
+        - name: MEMORY_CONSUMPTION
+          value: <+input>
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: PODS_AFFECTED_PERC
+          value: <+experiment.variables.POD_AFFECTED_PERCENTAGE>
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: NUMBER_OF_WORKERS
+          value: <+experiment.variables.worker_count>
+    - name: pod-memory-hog-p75
+      identity: pod-memory-hog
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: TOTAL_CHAOS_DURATION
+          value: "60"
+        - name: MEMORY_CONSUMPTION
+          value: <+input>
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: PODS_AFFECTED_PERC
+          value: <+experiment.variables.POD_AFFECTED_PERCENTAGE>
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: NUMBER_OF_WORKERS
+          value: <+experiment.variables.worker_count>
+  actions:
+    - name: delay-fs9
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - name: delay-o5i
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - name: delay-m7p
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+  vertices:
+    - name: v-start
+      start:
+        faults:
+          - name: pod-memory-hog-p25
+      end: {}
+    - name: v-ft5
+      start:
+        actions:
+          - name: delay-fs9
+      end:
+        faults:
+          - name: pod-memory-hog-p25
+    - name: v-25to50
+      start:
+        faults:
+          - name: pod-memory-hog-p50
+      end:
+        actions:
+          - name: delay-fs9
+    - name: v-o6c
+      start:
+        actions:
+          - name: delay-o5i
+      end:
+        faults:
+          - name: pod-memory-hog-p50
+    - name: v-50to75
+      start:
+        faults:
+          - name: pod-memory-hog-p75
+      end:
+        actions:
+          - name: delay-o5i
+    - name: v-m8s
+      start:
+        actions:
+          - name: delay-m7p
+      end:
+        faults:
+          - name: pod-memory-hog-p75
+    - name: v-end
+      start: {}
+      end:
+        actions:
+          - name: delay-m7p
+  cleanupPolicy: delete
+variables:
+  - name: workload_namespace
+    value: <+input>
+    type: String
+    required: true
+  - name: workload_name
+    value: <+input>
+    type: String
+    required: true
+  - name: workload_kind
+    value: <+input>
+    type: String
+    required: true
+  - name: worker_count
+    value: <+input>
+    type: String
+    required: false
+revision: v1
+isDefault: true
