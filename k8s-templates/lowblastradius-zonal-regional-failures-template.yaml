@@ -1,0 +1,41 @@
+name: lowblastradius-zonal-regional-failures
+identity: lowblastradiuszonalregionalfailures
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: KubernetesV2
+  faults:
+    - name: pod-network-loss-2dl
+      identity: pod-network-loss
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: TARGET_WORKLOAD_KIND
+          value: <+input>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+input>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+input>
+        - name: TOTAL_CHAOS_DURATION
+          value: 300
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: 100
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+        - name: NODE_LABEL
+          value: <+input>
+      authEnabled: false
+  vertices:
+    - name: v-2ey
+      start:
+        faults:
+          - name: pod-network-loss-2dl
+      end: {}
+    - name: v-end
+      start: {}
+      end:
+        faults:
+          - name: pod-network-loss-2dl
+  cleanupPolicy: delete
+revision: v1
+isDefault: true
