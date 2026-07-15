@@ -39,21 +39,18 @@ spec:
         - name: WORKERS
           value: <+experiment.variables.worker_count>
   actions:
-    - isRemote: true
-      name: delay-wd3
-      identity: delay
+    - name: delay-vm-jd5
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
-    - isRemote: true
-      name: delay-3zz
-      identity: delay
+    - name: delay-vm-xqq
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
-    - isRemote: true
-      name: delay-b40
-      identity: delay
+    - name: delay-vm-e0i
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
@@ -63,10 +60,10 @@ spec:
         faults:
           - name: linux-cpu-stress-p50
       end: {}
-    - name: v-wdx
+    - name: v-je5
       start:
         actions:
-          - name: delay-wd3
+          - name: delay-vm-jd5
       end:
         faults:
           - name: linux-cpu-stress-p50
@@ -76,11 +73,11 @@ spec:
           - name: linux-cpu-stress-p75
       end:
         actions:
-          - name: delay-wd3
-    - name: v-40t
+          - name: delay-vm-jd5
+    - name: v-xrq
       start:
         actions:
-          - name: delay-3zz
+          - name: delay-vm-xqq
       end:
         faults:
           - name: linux-cpu-stress-p75
@@ -90,11 +87,11 @@ spec:
           - name: linux-cpu-stress-p100
       end:
         actions:
-          - name: delay-3zz
-    - name: v-b4w
+          - name: delay-vm-xqq
+    - name: v-e1f
       start:
         actions:
-          - name: delay-b40
+          - name: delay-vm-e0i
       end:
         faults:
           - name: linux-cpu-stress-p100
@@ -102,11 +99,12 @@ spec:
       start: {}
       end:
         actions:
-          - name: delay-b40
+          - name: delay-vm-e0i
   cleanupPolicy: delete
-revision: v1
-isDefault: true
 variables:
   - name: worker_count
-    type: String
     value: <+input>
+    type: String
+    required: false
+revision: v1
+isDefault: true
