@@ -46,27 +46,23 @@ spec:
           value: 100
       authEnabled: false
   actions:
-    - isRemote: true
-      name: delay-gv0
-      identity: delay
+    - name: delay-vm-96j
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
-    - isRemote: true
-      name: delay-nio
-      identity: delay
+    - name: delay-vm-lh1
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
-    - isRemote: true
-      name: delay-vka
-      identity: delay
+    - name: delay-vm-yx0
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
-    - isRemote: true
-      name: delay-2ll
-      identity: delay
+    - name: delay-vm-8pl
+      identity: delay-vm
       isEnterprise: false
       continueOnCompletion: false
       values: []
@@ -76,10 +72,10 @@ spec:
         faults:
           - name: linux-network-loss-p25
       end: {}
-    - name: v-gvz
+    - name: v-97f
       start:
         actions:
-          - name: delay-gv0
+          - name: delay-vm-96j
       end:
         faults:
           - name: linux-network-loss-p25
@@ -89,11 +85,11 @@ spec:
           - name: linux-network-loss-p50
       end:
         actions:
-          - name: delay-gv0
-    - name: v-njk
+          - name: delay-vm-96j
+    - name: v-li2
       start:
         actions:
-          - name: delay-nio
+          - name: delay-vm-lh1
       end:
         faults:
           - name: linux-network-loss-p50
@@ -103,11 +99,11 @@ spec:
           - name: linux-network-loss-p75
       end:
         actions:
-          - name: delay-nio
-    - name: v-vld
+          - name: delay-vm-lh1
+    - name: v-yxz
       start:
         actions:
-          - name: delay-vka
+          - name: delay-vm-yx0
       end:
         faults:
           - name: linux-network-loss-p75
@@ -117,11 +113,11 @@ spec:
           - name: linux-network-loss-p100
       end:
         actions:
-          - name: delay-vka
-    - name: v-2mh
+          - name: delay-vm-yx0
+    - name: v-8qp
       start:
         actions:
-          - name: delay-2ll
+          - name: delay-vm-8pl
       end:
         faults:
           - name: linux-network-loss-p100
@@ -129,7 +125,7 @@ spec:
       start: {}
       end:
         actions:
-          - name: delay-2ll
+          - name: delay-vm-8pl
   cleanupPolicy: delete
 revision: v1
 isDefault: true
