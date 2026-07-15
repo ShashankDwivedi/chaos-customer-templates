@@ -1,0 +1,135 @@
+name: linux-network-loss-progressive
+identity: linuxnetworklossprogressive
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: Linux
+  faults:
+    - name: linux-network-loss-p25
+      identity: linux-network-loss
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 120s
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: 25
+      authEnabled: false
+    - name: linux-network-loss-p50
+      identity: linux-network-loss
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 120s
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: 50
+      authEnabled: false
+    - name: linux-network-loss-p75
+      identity: linux-network-loss
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 120s
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: 75
+      authEnabled: false
+    - name: linux-network-loss-p100
+      identity: linux-network-loss
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 120s
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: 100
+      authEnabled: false
+  actions:
+    - isRemote: true
+      name: delay-gv0
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - isRemote: true
+      name: delay-nio
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - isRemote: true
+      name: delay-vka
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - isRemote: true
+      name: delay-2ll
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+  vertices:
+    - name: v-start
+      start:
+        faults:
+          - name: linux-network-loss-p25
+      end: {}
+    - name: v-gvz
+      start:
+        actions:
+          - name: delay-gv0
+      end:
+        faults:
+          - name: linux-network-loss-p25
+    - name: v-25to50
+      start:
+        faults:
+          - name: linux-network-loss-p50
+      end:
+        actions:
+          - name: delay-gv0
+    - name: v-njk
+      start:
+        actions:
+          - name: delay-nio
+      end:
+        faults:
+          - name: linux-network-loss-p50
+    - name: v-50to75
+      start:
+        faults:
+          - name: linux-network-loss-p75
+      end:
+        actions:
+          - name: delay-nio
+    - name: v-vld
+      start:
+        actions:
+          - name: delay-vka
+      end:
+        faults:
+          - name: linux-network-loss-p75
+    - name: v-75to100
+      start:
+        faults:
+          - name: linux-network-loss-p100
+      end:
+        actions:
+          - name: delay-vka
+    - name: v-2mh
+      start:
+        actions:
+          - name: delay-2ll
+      end:
+        faults:
+          - name: linux-network-loss-p100
+    - name: v-end
+      start: {}
+      end:
+        actions:
+          - name: delay-2ll
+  cleanupPolicy: delete
+revision: v1
+isDefault: true
