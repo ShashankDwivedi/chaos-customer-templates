@@ -1,0 +1,35 @@
+identity: dynatrace-avg-response-time
+name: dynatrace-avg-response-time
+description: ""
+tags: []
+hubRef: CustomerTemplates
+type: apmProbe
+infrastructureType: Kubernetes
+probeProperties:
+    apmProbe:
+        comparator:
+            type: float
+            value: <+input>
+            criteria: <=
+        type: Dynatrace
+        dynatraceApmProbeInputs:
+            connectorID: <+input>
+            durationInMin: <+input>
+            metrics:
+                metricsSelector: builtin:service.response.time:filter(and(or(in("dt.entity.service",entitySelector("type(service),entityName(~"<+probe.variables.service_name>~")"))))):splitBy("dt.entity.service")/1000
+                entitySelector: type(service)
+runProperties:
+    timeout: 90s
+    interval: 5s
+    attempt: 3
+    pollingInterval: 30s
+    initialDelay: 5s
+    verbosity: debug
+variables:
+    - name: service_name
+      value: <+input>
+      type: String
+      required: true
+revision: 0
+isDefault: false
+isRemoved: false
