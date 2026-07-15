@@ -1,0 +1,196 @@
+name: k8s-pod-progressive-network-loss
+identity: podprogressivenetworkloss
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: KubernetesV2
+  faults:
+    - name: pod-network-loss-p25
+      identity: pod-network-loss
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: "25"
+        - name: JITTER
+          value: "0"
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: TOTAL_CHAOS_DURATION
+          value: 120
+    - name: pod-network-loss-p50
+      identity: pod-network-loss
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: "50"
+        - name: JITTER
+          value: "0"
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: TOTAL_CHAOS_DURATION
+          value: 120
+    - name: pod-network-loss-p75
+      identity: pod-network-loss
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: "75"
+        - name: JITTER
+          value: "0"
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: TOTAL_CHAOS_DURATION
+          value: 120
+    - name: pod-network-loss-p100
+      identity: pod-network-loss
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: "100"
+        - name: JITTER
+          value: "0"
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: TOTAL_CHAOS_DURATION
+          value: 120
+  actions:
+    - name: delay-cah
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - name: delay-i6i
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - name: delay-ous
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - name: delay-ud6
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+  vertices:
+    - name: v-start
+      start:
+        faults:
+          - name: pod-network-loss-p25
+      end: {}
+    - name: v-cbe
+      start:
+        actions:
+          - name: delay-cah
+      end:
+        faults:
+          - name: pod-network-loss-p25
+    - name: v-25to50
+      start:
+        faults:
+          - name: pod-network-loss-p50
+      end:
+        actions:
+          - name: delay-cah
+    - name: v-i7l
+      start:
+        actions:
+          - name: delay-i6i
+      end:
+        faults:
+          - name: pod-network-loss-p50
+    - name: v-50to75
+      start:
+        faults:
+          - name: pod-network-loss-p75
+      end:
+        actions:
+          - name: delay-i6i
+    - name: v-ovs
+      start:
+        actions:
+          - name: delay-ous
+      end:
+        faults:
+          - name: pod-network-loss-p75
+    - name: v-75to100
+      start:
+        faults:
+          - name: pod-network-loss-p100
+      end:
+        actions:
+          - name: delay-ous
+    - name: v-ue1
+      start:
+        actions:
+          - name: delay-ud6
+      end:
+        faults:
+          - name: pod-network-loss-p100
+    - name: v-end
+      start: {}
+      end:
+        actions:
+          - name: delay-ud6
+  cleanupPolicy: delete
+variables:
+  - name: workload_kind
+    value: <+input>
+    type: String
+    required: true
+  - name: workload_namespace
+    value: <+input>
+    type: String
+    required: true
+  - name: workload_name
+    value: <+input>
+    type: String
+    required: true
+revision: v1
+isDefault: true
