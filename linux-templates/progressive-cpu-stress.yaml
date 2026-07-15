@@ -1,0 +1,112 @@
+name: linux-cpu-stress-progressive
+identity: linuxcpustressprogressive
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: Linux
+  faults:
+    - name: linux-cpu-stress-p50
+      identity: linux-cpu-stress
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 60s
+        - name: LOAD
+          value: "50"
+        - name: WORKERS
+          value: <+experiment.variables.worker_count>
+    - name: linux-cpu-stress-p75
+      identity: linux-cpu-stress
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 60s
+        - name: LOAD
+          value: "75"
+        - name: WORKERS
+          value: <+experiment.variables.worker_count>
+    - name: linux-cpu-stress-p100
+      identity: linux-cpu-stress
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 60s
+        - name: LOAD
+          value: "100"
+        - name: WORKERS
+          value: <+experiment.variables.worker_count>
+  actions:
+    - isRemote: true
+      name: delay-wd3
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - isRemote: true
+      name: delay-3zz
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - isRemote: true
+      name: delay-b40
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+  vertices:
+    - name: v-start
+      start:
+        faults:
+          - name: linux-cpu-stress-p50
+      end: {}
+    - name: v-wdx
+      start:
+        actions:
+          - name: delay-wd3
+      end:
+        faults:
+          - name: linux-cpu-stress-p50
+    - name: v-50to75
+      start:
+        faults:
+          - name: linux-cpu-stress-p75
+      end:
+        actions:
+          - name: delay-wd3
+    - name: v-40t
+      start:
+        actions:
+          - name: delay-3zz
+      end:
+        faults:
+          - name: linux-cpu-stress-p75
+    - name: v-75to100
+      start:
+        faults:
+          - name: linux-cpu-stress-p100
+      end:
+        actions:
+          - name: delay-3zz
+    - name: v-b4w
+      start:
+        actions:
+          - name: delay-b40
+      end:
+        faults:
+          - name: linux-cpu-stress-p100
+    - name: v-end
+      start: {}
+      end:
+        actions:
+          - name: delay-b40
+  cleanupPolicy: delete
+revision: v1
+isDefault: true
+variables:
+  - name: worker_count
+    type: String
+    value: <+input>
