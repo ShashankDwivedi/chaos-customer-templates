@@ -1,0 +1,196 @@
+name: k8s-pod-progressive-network-latency
+identity: podprogressivenetworklatency
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: KubernetesV2
+  faults:
+    - name: pod-network-latency-200ms
+      identity: pod-network-latency
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: NETWORK_LATENCY
+          value: "200"
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: PODS_AFFECTED_PERC
+          value: <+experiment.variables.POD_AFFECTED_PERCENTAGE>
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: TOTAL_CHAOS_DURATION
+          value: 120
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+    - name: pod-network-latency-500ms
+      identity: pod-network-latency
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: NETWORK_LATENCY
+          value: "500"
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: PODS_AFFECTED_PERC
+          value: <+experiment.variables.POD_AFFECTED_PERCENTAGE>
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: TOTAL_CHAOS_DURATION
+          value: 120
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+    - name: pod-network-latency-1000ms
+      identity: pod-network-latency
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: NETWORK_LATENCY
+          value: "1000"
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: PODS_AFFECTED_PERC
+          value: <+experiment.variables.POD_AFFECTED_PERCENTAGE>
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: TOTAL_CHAOS_DURATION
+          value: 120
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+    - name: pod-network-latency-2000ms
+      identity: pod-network-latency
+      revision: "1"
+      isEnterprise: true
+      values:
+        - name: NETWORK_LATENCY
+          value: "2000"
+        - name: TARGET_CONTAINER
+          value: ""
+        - name: NODE_LABEL
+          value: ""
+        - name: PODS_AFFECTED_PERC
+          value: <+experiment.variables.POD_AFFECTED_PERCENTAGE>
+        - name: TARGET_WORKLOAD_KIND
+          value: <+experiment.variables.workload_kind>
+        - name: TARGET_WORKLOAD_NAMESPACE
+          value: <+experiment.variables.workload_namespace>
+        - name: TARGET_WORKLOAD_NAMES
+          value: <+experiment.variables.workload_name>
+        - name: TOTAL_CHAOS_DURATION
+          value: 120
+        - name: POD_AFFECTED_PERCENTAGE
+          value: 100
+  actions:
+    - name: delay-v7o
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - name: delay-1lz
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - name: delay-7n3
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - name: delay-dod
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+  vertices:
+    - name: v-start
+      start:
+        faults:
+          - name: pod-network-latency-200ms
+      end: {}
+    - name: v-v8q
+      start:
+        actions:
+          - name: delay-v7o
+      end:
+        faults:
+          - name: pod-network-latency-200ms
+    - name: v-200to500
+      start:
+        faults:
+          - name: pod-network-latency-500ms
+      end:
+        actions:
+          - name: delay-v7o
+    - name: v-1mx
+      start:
+        actions:
+          - name: delay-1lz
+      end:
+        faults:
+          - name: pod-network-latency-500ms
+    - name: v-500to1000
+      start:
+        faults:
+          - name: pod-network-latency-1000ms
+      end:
+        actions:
+          - name: delay-1lz
+    - name: v-7nz
+      start:
+        actions:
+          - name: delay-7n3
+      end:
+        faults:
+          - name: pod-network-latency-1000ms
+    - name: v-1000to2000
+      start:
+        faults:
+          - name: pod-network-latency-2000ms
+      end:
+        actions:
+          - name: delay-7n3
+    - name: v-dpc
+      start:
+        actions:
+          - name: delay-dod
+      end:
+        faults:
+          - name: pod-network-latency-2000ms
+    - name: v-end
+      start: {}
+      end:
+        actions:
+          - name: delay-dod
+  cleanupPolicy: delete
+variables:
+  - name: workload_kind
+    value: <+input>
+    type: String
+    required: true
+  - name: workload_namespace
+    value: <+input>
+    type: String
+    required: true
+  - name: workload_name
+    value: <+input>
+    type: String
+    required: true
+revision: v1
+isDefault: true
