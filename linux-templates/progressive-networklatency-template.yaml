@@ -1,0 +1,135 @@
+name: linux-network-latency-progressive
+identity: linuxnetworklatencyprogressive
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: Linux
+  faults:
+    - name: linux-network-latency-200ms
+      identity: linux-network-latency
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 120s
+        - name: NETWORK_LATENCY
+          value: 200
+      authEnabled: false
+    - name: linux-network-latency-500ms
+      identity: linux-network-latency
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 120s
+        - name: NETWORK_LATENCY
+          value: 500
+      authEnabled: false
+    - name: linux-network-latency-1000ms
+      identity: linux-network-latency
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 120s
+        - name: NETWORK_LATENCY
+          value: 1000
+      authEnabled: false
+    - name: linux-network-latency-2000ms
+      identity: linux-network-latency
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: 120s
+        - name: NETWORK_LATENCY
+          value: 2000
+      authEnabled: false
+  actions:
+    - isRemote: true
+      name: delay-4wm
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - isRemote: true
+      name: delay-abh
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - isRemote: true
+      name: delay-hw7
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - isRemote: true
+      name: delay-niy
+      identity: delay
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+  vertices:
+    - name: v-start
+      start:
+        faults:
+          - name: linux-network-latency-200ms
+      end: {}
+    - name: v-4xj
+      start:
+        actions:
+          - name: delay-4wm
+      end:
+        faults:
+          - name: linux-network-latency-200ms
+    - name: v-200to500
+      start:
+        faults:
+          - name: linux-network-latency-500ms
+      end:
+        actions:
+          - name: delay-4wm
+    - name: v-acc
+      start:
+        actions:
+          - name: delay-abh
+      end:
+        faults:
+          - name: linux-network-latency-500ms
+    - name: v-500to1000
+      start:
+        faults:
+          - name: linux-network-latency-1000ms
+      end:
+        actions:
+          - name: delay-abh
+    - name: v-hx8
+      start:
+        actions:
+          - name: delay-hw7
+      end:
+        faults:
+          - name: linux-network-latency-1000ms
+    - name: v-1000to2000
+      start:
+        faults:
+          - name: linux-network-latency-2000ms
+      end:
+        actions:
+          - name: delay-hw7
+    - name: v-njz
+      start:
+        actions:
+          - name: delay-niy
+      end:
+        faults:
+          - name: linux-network-latency-2000ms
+    - name: v-end
+      start: {}
+      end:
+        actions:
+          - name: delay-niy
+  cleanupPolicy: delete
+revision: v1
+isDefault: true
