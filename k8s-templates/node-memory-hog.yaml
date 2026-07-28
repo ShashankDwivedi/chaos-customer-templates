@@ -1,0 +1,35 @@
+name: node-memory-hog
+identity: nodememoryhog
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: KubernetesV2
+  faults:
+    - name: node-memory-hog-b6g
+      identity: node-memory-hog
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: TOTAL_CHAOS_DURATION
+          value: 300
+        - name: NUMBER_OF_WORKERS
+          value: <+input>
+        - name: MEMORY_CONSUMPTION_PERCENTAGE
+          value: <+input>
+        - name: NODES_AFFECTED_PERCENTAGE
+          value: <+input>
+      authEnabled: false
+  vertices:
+    - name: v-b7u
+      start:
+        faults:
+          - name: node-memory-hog-b6g
+      end: {}
+    - name: v-end
+      start: {}
+      end:
+        faults:
+          - name: node-memory-hog-b6g
+  cleanupPolicy: delete
+revision: v1
+isDefault: true
