@@ -1,0 +1,35 @@
+name: node-cpu-hog
+identity: nodecpuhog
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: KubernetesV2
+  faults:
+    - name: node-cpu-hog-1ox
+      identity: node-cpu-hog
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: TOTAL_CHAOS_DURATION
+          value: 300
+        - name: NODE_CPU_CORE
+          value: <+input>
+        - name: CPU_LOAD
+          value: <+input>
+        - name: NODES_AFFECTED_PERCENTAGE
+          value: <+input>
+      authEnabled: false
+  vertices:
+    - name: v-1qj
+      start:
+        faults:
+          - name: node-cpu-hog-1ox
+      end: {}
+    - name: v-end
+      start: {}
+      end:
+        faults:
+          - name: node-cpu-hog-1ox
+  cleanupPolicy: delete
+revision: v1
+isDefault: true
