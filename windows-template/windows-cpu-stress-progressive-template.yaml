@@ -1,0 +1,101 @@
+name: windows-cpu-progressive-template
+identity: windowscpuprogressivetemplate
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: Windows
+  faults:
+    - name: windows-cpu-stress-tuy
+      identity: windows-cpu-stress
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: "60"
+        - name: CPU_PERCENTAGE
+          value: 50
+        - name: CPU_CORES
+          value: <+experiment.variables.cpu_cores>
+      authEnabled: false
+    - name: windows-cpu-stress-350
+      identity: windows-cpu-stress
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: "60"
+        - name: CPU_PERCENTAGE
+          value: 75
+        - name: CPU_CORES
+          value: <+experiment.variables.cpu_cores>
+      authEnabled: false
+    - name: windows-cpu-stress-3oq
+      identity: windows-cpu-stress
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: "60"
+        - name: CPU_CORES
+          value: <+experiment.variables.cpu_cores>
+        - name: CPU_PERCENTAGE
+          value: 100
+      authEnabled: false
+  vertices:
+    - name: v-tw1
+      start:
+        faults:
+          - name: windows-cpu-stress-tuy
+      end: {}
+    - name: v-gxi
+      start:
+        actions:
+          - name: delay-windows-gvm
+      end:
+        faults:
+          - name: windows-cpu-stress-tuy
+    - name: v-364
+      start:
+        faults:
+          - name: windows-cpu-stress-350
+      end:
+        actions:
+          - name: delay-windows-gvm
+    - name: v-t85
+      start:
+        actions:
+          - name: delay-windows-t6e
+      end:
+        faults:
+          - name: windows-cpu-stress-350
+    - name: v-3px
+      start:
+        faults:
+          - name: windows-cpu-stress-3oq
+      end:
+        actions:
+          - name: delay-windows-t6e
+    - name: v-end
+      start: {}
+      end:
+        faults:
+          - name: windows-cpu-stress-3oq
+  cleanupPolicy: delete
+  actions:
+    - identity: delay-windows
+      name: delay-windows-gvm
+      continueOnCompletion: false
+      values: []
+      isEnterprise: false
+    - identity: delay-windows
+      name: delay-windows-t6e
+      continueOnCompletion: false
+      values: []
+      isEnterprise: false
+variables:
+  - name: cpu_cores
+    value: <+input>
+    type: String
+    required: false
+revision: v1
+isDefault: true
