@@ -1,0 +1,132 @@
+name: windows-network-loss-progressive-template
+identity: windowsnetworklossprogressivetemplate
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: Windows
+  faults:
+    - name: windows-network-loss-zcg
+      identity: windows-network-loss
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: "240"
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: 50
+        - name: DESTINATION_HOSTS
+          value: <+experiment.variables.destination_host>
+        - name: DESTINATION_IPS
+          value: <+experiment.variables.destination_ip>
+        - name: DESTINATION_PORTS
+          value: <+experiment.variables.destination_port>
+        - name: NETWORK_PROTOCOLS
+          value: <+experiment.variables.network_protocol>
+      authEnabled: false
+    - name: windows-network-loss-7n9
+      identity: windows-network-loss
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: "240"
+        - name: DESTINATION_HOSTS
+          value: <+experiment.variables.destination_host>
+        - name: DESTINATION_IPS
+          value: <+experiment.variables.destination_ip>
+        - name: DESTINATION_PORTS
+          value: <+experiment.variables.destination_port>
+        - name: NETWORK_PROTOCOLS
+          value: <+experiment.variables.network_protocol>
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: 75
+      authEnabled: false
+    - name: windows-network-loss-f11
+      identity: windows-network-loss
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: "240"
+        - name: DESTINATION_HOSTS
+          value: <+experiment.variables.destination_host>
+        - name: DESTINATION_IPS
+          value: <+experiment.variables.destination_ip>
+        - name: DESTINATION_PORTS
+          value: <+experiment.variables.destination_port>
+        - name: NETWORK_PACKET_LOSS_PERCENTAGE
+          value: 100
+        - name: NETWORK_PROTOCOLS
+          value: <+experiment.variables.network_protocol>
+      authEnabled: false
+  actions:
+    - name: delay-windows-z4j
+      identity: delay-windows
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - name: delay-windows-66r
+      identity: delay-windows
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+  vertices:
+    - name: v-zdo
+      start:
+        faults:
+          - name: windows-network-loss-zcg
+      end: {}
+    - name: v-z5x
+      start:
+        actions:
+          - name: delay-windows-z4j
+      end:
+        faults:
+          - name: windows-network-loss-zcg
+    - name: v-7ob
+      start:
+        faults:
+          - name: windows-network-loss-7n9
+      end:
+        actions:
+          - name: delay-windows-z4j
+    - name: v-68e
+      start:
+        actions:
+          - name: delay-windows-66r
+      end:
+        faults:
+          - name: windows-network-loss-7n9
+    - name: v-f1v
+      start:
+        faults:
+          - name: windows-network-loss-f11
+      end:
+        actions:
+          - name: delay-windows-66r
+    - name: v-end
+      start: {}
+      end:
+        faults:
+          - name: windows-network-loss-f11
+  cleanupPolicy: delete
+variables:
+  - name: destination_host
+    value: <+input>
+    type: String
+    required: false
+  - name: destination_port
+    value: <+input>
+    type: String
+    required: false
+  - name: destination_ip
+    value: <+input>
+    type: String
+    required: false
+  - name: network_protocol
+    type: String
+    value: <+input>
+    required: true
+    description: tcp,udp,icmp
+revision: v1
+isDefault: true
