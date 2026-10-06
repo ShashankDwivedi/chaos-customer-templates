@@ -1,0 +1,131 @@
+name: windows-network-latency-progressive-template
+identity: windowsnetworklatencyprogressivetemplate
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: Windows
+  faults:
+    - name: windows-network-latency-md0
+      identity: windows-network-latency
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: "240"
+        - name: DESTINATION_HOSTS
+          value: <+experiment.variables.destination_host>
+        - name: DESTINATION_IPS
+          value: <+experiment.variables.destination_ip>
+        - name: DESTINATION_PORTS
+          value: <+experiment.variables.destination_port>
+        - name: NETWORK_PROTOCOLS
+          value: tcp
+        - name: NETWORK_LATENCY
+          value: <+experiment.variables.latency>
+      authEnabled: false
+    - name: windows-network-latency-8pj
+      identity: windows-network-latency
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: "240"
+        - name: DESTINATION_HOSTS
+          value: <+experiment.variables.destination_host>
+        - name: DESTINATION_IPS
+          value: <+experiment.variables.destination_ip>
+        - name: DESTINATION_PORTS
+          value: <+experiment.variables.destination_port>
+        - name: NETWORK_PROTOCOLS
+          value: tcp
+        - name: NETWORK_LATENCY
+          value: <+experiment.variables.latency>
+      authEnabled: false
+    - name: windows-network-latency-6zb
+      identity: windows-network-latency
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: "240"
+        - name: DESTINATION_HOSTS
+          value: <+experiment.variables.destination_host>
+        - name: DESTINATION_IPS
+          value: <+experiment.variables.destination_ip>
+        - name: DESTINATION_PORTS
+          value: <+experiment.variables.destination_port>
+        - name: NETWORK_PROTOCOLS
+          value: tcp
+        - name: NETWORK_LATENCY
+          value: <+experiment.variables.latency>
+      authEnabled: false
+  actions:
+    - name: delay-windows-5y0
+      identity: delay-windows
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - name: delay-windows-ydq
+      identity: delay-windows
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+  vertices:
+    - name: v-mdu
+      start:
+        faults:
+          - name: windows-network-latency-md0
+      end: {}
+    - name: v-5zk
+      start:
+        actions:
+          - name: delay-windows-5y0
+      end:
+        faults:
+          - name: windows-network-latency-md0
+    - name: v-8qq
+      start:
+        faults:
+          - name: windows-network-latency-8pj
+      end:
+        actions:
+          - name: delay-windows-5y0
+    - name: v-yfi
+      start:
+        actions:
+          - name: delay-windows-ydq
+      end:
+        faults:
+          - name: windows-network-latency-8pj
+    - name: v-70m
+      start:
+        faults:
+          - name: windows-network-latency-6zb
+      end:
+        actions:
+          - name: delay-windows-ydq
+    - name: v-end
+      start: {}
+      end:
+        faults:
+          - name: windows-network-latency-6zb
+  cleanupPolicy: delete
+variables:
+  - name: destination_host
+    value: <+input>
+    type: String
+    required: false
+  - name: destination_ip
+    value: <+input>
+    type: String
+    required: false
+  - name: destination_port
+    value: <+input>
+    type: String
+    required: false
+  - name: latency
+    value: <+input>
+    type: String
+    required: true
+revision: v1
+isDefault: true
