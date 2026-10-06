@@ -21,7 +21,7 @@ spec:
         - name: DESTINATION_PORTS
           value: <+experiment.variables.destination_port>
         - name: NETWORK_PROTOCOLS
-          value: <+experiment.variables.network_protocol>
+          value: tcp
       authEnabled: false
     - name: windows-network-loss-7n9
       identity: windows-network-loss
@@ -36,10 +36,10 @@ spec:
           value: <+experiment.variables.destination_ip>
         - name: DESTINATION_PORTS
           value: <+experiment.variables.destination_port>
-        - name: NETWORK_PROTOCOLS
-          value: <+experiment.variables.network_protocol>
         - name: NETWORK_PACKET_LOSS_PERCENTAGE
           value: 75
+        - name: NETWORK_PROTOCOLS
+          value: tcp
       authEnabled: false
     - name: windows-network-loss-f11
       identity: windows-network-loss
@@ -57,7 +57,7 @@ spec:
         - name: NETWORK_PACKET_LOSS_PERCENTAGE
           value: 100
         - name: NETWORK_PROTOCOLS
-          value: <+experiment.variables.network_protocol>
+          value: tcp
       authEnabled: false
   actions:
     - name: delay-windows-z4j
@@ -123,10 +123,5 @@ variables:
     value: <+input>
     type: String
     required: false
-  - name: network_protocol
-    type: String
-    value: <+input>
-    required: true
-    description: tcp,udp,icmp
 revision: v1
 isDefault: true
