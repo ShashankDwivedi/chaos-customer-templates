@@ -1,0 +1,99 @@
+name: windows-memory-progressive-template
+identity: windowsmemoryprogressivetemplate
+kind: ChaosExperimentTemplate
+apiVersion: litmuschaos.io/v1beta1
+spec:
+  infraType: Windows
+  faults:
+    - name: windows-memory-stress-x1w
+      identity: windows-memory-stress
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: <+experiment.variables.duration>
+        - name: MEMORY_PERCENTAGE
+          value: <+experiment.variables.memory_percentage>
+      authEnabled: false
+    - name: windows-memory-stress-mcu
+      identity: windows-memory-stress
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: <+experiment.variables.duration>
+        - name: MEMORY_PERCENTAGE
+          value: <+experiment.variables.memory_percentage>
+      authEnabled: false
+    - name: windows-memory-stress-jh9
+      identity: windows-memory-stress
+      revision: v1
+      isEnterprise: true
+      values:
+        - name: DURATION
+          value: <+experiment.variables.duration>
+        - name: MEMORY_PERCENTAGE
+          value: <+experiment.variables.memory_percentage>
+      authEnabled: false
+  actions:
+    - name: delay-windows-c4e
+      identity: delay-windows
+      isEnterprise: false
+      continueOnCompletion: false
+      values: []
+    - identity: delay-windows
+      name: delay-windows-9uq
+      continueOnCompletion: false
+      values: []
+      isEnterprise: false
+  vertices:
+    - name: v-x2y
+      start:
+        faults:
+          - name: windows-memory-stress-x1w
+      end: {}
+    - name: v-c61
+      start:
+        actions:
+          - name: delay-windows-c4e
+      end:
+        faults:
+          - name: windows-memory-stress-x1w
+    - name: v-mdz
+      start:
+        faults:
+          - name: windows-memory-stress-mcu
+      end:
+        actions:
+          - name: delay-windows-c4e
+    - name: v-9w1
+      start:
+        actions:
+          - name: delay-windows-9uq
+      end:
+        faults:
+          - name: windows-memory-stress-mcu
+    - name: v-ji7
+      start:
+        faults:
+          - name: windows-memory-stress-jh9
+      end:
+        actions:
+          - name: delay-windows-9uq
+    - name: v-end
+      start: {}
+      end:
+        faults:
+          - name: windows-memory-stress-jh9
+  cleanupPolicy: delete
+variables:
+  - name: duration
+    value: <+input>
+    type: String
+    required: true
+  - name: memory_percentage
+    value: <+input>
+    type: String
+    required: true
+revision: v1
+isDefault: true
